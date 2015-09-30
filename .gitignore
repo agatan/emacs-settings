@@ -1,0 +1,10 @@
+*.dat
+auto-save-list/
+backups/
+el-get/
+elpa/
+ido.last
+places
+*.eld
+.recentf
+.smex-items
