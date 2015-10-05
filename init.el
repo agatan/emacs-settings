@@ -1,69 +1,10 @@
-;;;;
-;; Packages
-;;;;
-
-(require 'package)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
-             '("tromey" . "http://tromey.com/elpa/") t)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("gnu" . "http://elpa.gnu.org/packages/"))
-
-;; Load and activate emacs packages.
-(package-initialize)
-
-;; Download the Elpa archive description if needed.
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-;; The packages I want installed.
-(defvar my-packages
-  '(;; makes handling lisp expressions much
-    paredit
-
-    ;; auto completion for everythig
-    auto-complete
-
-    ;; Syntax checker for many languages
-    flycheck
-
-    ;; Easy to open shell
-    shell-pop
-
-    ;; Input Japanese
-    ddskk
-
-    ;; allow ido usage in as many contexts as possible.
-    ido-ubiquitous
-
-    ;; Enhances M-x to allow easier execution of commands.
-    smex
-
-    ;; project navigation
-    projectile
-
-    ;; colorful parenthesis matching
-    rainbow-delimiters
-
-    ;; edit html tags like sexps
-    tagedit
-
-    ;; git integration
-    magit))
-
-;; ON OS X, an Emacs instance started from graphical user
-;; interface will have a different environment than a shell.
-(if (eq system-type 'darwin)
-    (add-to-list 'my-packages 'exec-path-from-shell))
+;; Determine 'user-emacs-directory'
+(when load-file-name
+  (setq user-emacs-directory (expand-file-name
+                              (file-name-directory load-file-name))))
 
 
-;; Install packages
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+(load (locate-user-emacs-file "bootstrap"))
 
 
 ;; Place manually downloaded elisp files in ~/.emacs.d/vendor.
@@ -106,3 +47,11 @@
 
 ;; skk settings
 (load "my-skk.el")
+
+
+;;;;
+;; Lnaguages
+;;;;
+(load "setup-clojure.el")
+
+(load "setup-common-lisp.el")

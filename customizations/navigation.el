@@ -7,41 +7,32 @@
 (setq uniquify-buffer-name-style 'forward)
 
 ;; Turn on recent file mode.
-(setq recentf-save-file (concat user-emacs-directory ".recentf"))
-(require 'recentf)
-(recentf-mode 1)
-(setq recentf-max-menu-items 40)
-
-;; ido-mode allows you yo more easily navigate choices.
-(ido-mode t)
-
-;; This allows partial atches.
-(setq ido-enable-flex-matching t)
-
-;; Turn this behavior off because it's annoying.
-(setq ido-use-filename-at-point nil)
-
-;; Don't try to match file across all "work" directories.
-;; Only match files in the current directory displayed in the minibuffer.
-(setq ido-auto-merge-work-directories-length -1)
-
-;; Includes buffer names of recently open files.
-(setq ido-use-virtual-buffers t)
-
-;; This enables ido in all contexts where it could be useful.
-(ido-ubiquitous-mode 1)
-
-;; Shows a list of buffers
-(global-set-key (kbd "C-x b") 'ibuffer)
-
-
-
-;; Enhances M-x to allow easier execution of commands.
-(setq smex-save-file (concat user-emacs-directory ".smex-items"))
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-
-
+(use-package recentf
+  :config
+  (progn
+    (setq recentf-save-file (concat user-emacs-directory ".recentf"))
+    (require 'recentf)
+    (recentf-mode 1)
+    (setq recentf-max-menu-items 40)))
 
 ;; projectile everywhere
-(projectile-global-mode)
+(use-package projectile
+  :config
+  (projectile-global-mode))
+
+
+;; helm settings
+(use-package helm
+  :config
+  (helm-mode 1))
+
+
+;; ace-isearch
+(use-package ace-isearch
+  :config
+  (global-ace-isearch-mode 1))
+
+(use-package helm-swoop
+  :config
+  (progn
+    (setq helm-swoop-split-with-multiple-windows t)))

@@ -12,8 +12,13 @@
   (setq ns-alternate-modifier 'super))
 
 ;; shell-pop settings
-(custom-set-variables
- '(shell-pop-default-directory "~")
- '(shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda () (ansi-term shell-pop-term-shell))))
-'(shell-pop-term-shell (substring (shell-command-to-string "which zsh 2>/dev/null") 0 -1)))
-(global-set-key (kbd "C-c c") 'shell-pop)
+(use-package shell-pop
+  :config
+  (progn
+    (custom-set-variables
+     '(shell-pop-default-directory "~")
+     '(shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda () (ansi-term shell-pop-term-shell))))
+     '(shell-pop-term-shell (substring (shell-command-to-string "which zsh 2>/dev/null") 0 -1))))
+  :bind ("C-c c" . shell-pop))
+
+(use-package magit)

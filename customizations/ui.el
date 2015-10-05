@@ -4,10 +4,6 @@
 ;; Turn off the menu bar at the top of each frame.
 (menu-bar-mode -1)
 
-;; Show line numbers
-(global-linum-mode)
-(setq linum-format "%3d")
-
 ;; Turn off the graphical tool bar at the top of each frame.
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
@@ -15,7 +11,9 @@
 ;; Color Themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'load-path "~/.emacs.d/themes")
-(load-theme 'tomorrow-night-bright t)
+(use-package warm-night-theme
+  :config
+  (load-theme 'warm-night t))
 
 ;; increse font size for better readability
 (set-face-attribute 'default nil :height 140)
@@ -52,3 +50,15 @@
 
 ;; Show trailing white spaces
 (setq-default show-trailing-whitespace t)
+
+
+(use-package rainbow-delimiters)
+
+
+;; popup windows
+(use-package popwin
+  :config
+  (progn
+    (popwin-mode 1)
+    (setq display-buffer-function 'popwin:display-buffer)
+    (setq popwin:popup-window-position 'bottom)))

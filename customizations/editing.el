@@ -11,15 +11,6 @@
 ;; Highlights matching parenthsis
 (show-paren-mode 1)
 
-;; Highlights current line
-;; (global-hl-line-mode 1)
-
-;; Interactive search key bindings.
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
-
 ;; Don't use hard tabs
 (setq-default indent-tabs-mode nil)
 
@@ -67,9 +58,15 @@
 
 
 ;; Auto-complete settings
-(require 'auto-complete-config)
-(ac-config-default)
-(ac-set-trigger-key "TAB")
-(add-to-list 'ac-sources 'ac-source-symbols)
-(add-to-list 'ac-sources 'ac-source-filename)
+(use-package auto-complete
+  :config
+  (progn
+    (require 'auto-complete-config)
+    (ac-config-default)
+    (ac-set-trigger-key "TAB")
+    (add-to-list 'ac-sources 'ac-source-symbols)
+    (add-to-list 'ac-sources 'ac-source-filename)))
 
+(use-package tagedit)
+(use-package flycheck)
+(use-package paredit)
