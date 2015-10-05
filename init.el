@@ -55,3 +55,5 @@
 (load "setup-clojure.el")
 
 (load "setup-common-lisp.el")
+
+(load "setup-c-cpp.el")
