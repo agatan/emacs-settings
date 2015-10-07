@@ -14,3 +14,12 @@
     (add-hook 'c-mode-hook (lambda () (push 'ac-source-c-headers ac-sources)))))
 
 (use-package helm-make)
+
+(defun my/ac-cpp-mode-setup ()
+  (setq ac-sources (cons 'ac-source-clang-async ac-sources))
+  (setq ac-clang-cflags '("-std=c++1z"))
+  (ac-clang-launch-completion-process))
+
+(use-package auto-complete-clang-async
+  :config
+  (add-hook 'c++-mode-hook 'my/ac-cpp-mode-setup))
