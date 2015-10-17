@@ -67,6 +67,13 @@
     (add-to-list 'ac-sources 'ac-source-symbols)
     (add-to-list 'ac-sources 'ac-source-filename)))
 
+(use-package company
+  :commands (company-mode)
+  :config
+  (progn
+    (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
+    (setq company-tooltip-align-annotations t)))
+
 (use-package tagedit)
 (use-package flycheck)
 (use-package paredit)

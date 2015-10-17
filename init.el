@@ -57,3 +57,7 @@
 (load "setup-common-lisp.el")
 
 (load "setup-c-cpp.el")
+
+(load "setup-rust.el")
+
+(load "setup-haskell.el")
