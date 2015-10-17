@@ -61,3 +61,5 @@
 (load "setup-rust.el")
 
 (load "setup-haskell.el")
+
+(load "setup-ocaml.el")
