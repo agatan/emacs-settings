@@ -10,6 +10,9 @@
   (setq default-input-method "MacOSX")
   (setq ns-command-modifier 'meta)
   (setq ns-alternate-modifier 'super))
+(when (eq system-type 'gnu/linux)
+  (setq x-super-keysym 'meta)
+  (setq x-meta-keysym 'super))
 
 ;; shell-pop settings
 (use-package shell-pop

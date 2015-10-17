@@ -16,7 +16,11 @@
   (load-theme 'warm-night t))
 
 ;; increse font size for better readability
-(set-face-attribute 'default nil :height 140)
+(cond
+ ((or (eq system-type 'mac) (eq system-type 'darwin))
+  (set-face-attribute 'default nil :height 140))
+ ((eq system-type 'gnu/linux) (set-face-attribute 'default nil :height 100)))
+
 
 ;; These settings relate to how emacs interacts with your operation system
 (setq
