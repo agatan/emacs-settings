@@ -26,7 +26,6 @@
   :config
   (progn
     (helm-mode 1)
-    (define-key global-map (kbd "C-x C-f") 'helm-find-files)
     (define-key global-map (kbd "C-x C-r") 'helm-recentf)
     (define-key global-map (kbd "C-x b") 'helm-buffers-list)
     (define-key helm-map (kbd "C-h") 'delete-backward-char)
