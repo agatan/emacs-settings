@@ -63,3 +63,5 @@
 (load "setup-haskell.el")
 
 (load "setup-ocaml.el")
+
+(load "setup-nim.el")
