@@ -20,6 +20,10 @@
  ((or (eq system-type 'mac) (eq system-type 'darwin))
   (set-face-attribute 'default nil :family "Ricty Diminished" :height 140))
  ((eq system-type 'gnu/linux) (set-face-attribute 'default nil :family "Ricty Diminished" :height 100)))
+(set-fontset-font (frame-parameter nil 'font)
+                  'japanese-jisx0208
+                  (font-spec :family "Ricty Diminished"))
+
 
 
 ;; These settings relate to how emacs interacts with your operation system
