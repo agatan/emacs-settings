@@ -48,6 +48,9 @@
 ;; skk settings
 (load "my-skk.el")
 
+;; org settings
+(load "my-org.el")
+
 
 ;;;;
 ;; Lnaguages
