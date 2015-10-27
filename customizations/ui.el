@@ -18,7 +18,7 @@
 ;; increse font size for better readability
 (cond
  ((or (eq system-type 'mac) (eq system-type 'darwin))
-  (set-face-attribute 'default nil :height 140))
+  (set-face-attribute 'default nil :family "Ricty Diminished" :height 140))
  ((eq system-type 'gnu/linux) (set-face-attribute 'default nil :family "Ricty Diminished" :height 100)))
 
 
