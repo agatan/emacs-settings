@@ -6,7 +6,6 @@
   (progn
     (use-package flycheck-rust)
     (use-package racer)
-    (setq racer-cmd "~/rust/racer/target/release/racer")
     (setq racer-rust-src-path "~/rust/rust/src/")
     (add-hook 'rust-mode-hook #'racer-mode)
     (add-hook 'racer-mode-hook #'eldoc-mode)
