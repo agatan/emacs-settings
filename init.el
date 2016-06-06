@@ -39,7 +39,11 @@
   (defmacro use-package (&rest args)
     (error "Please install use-package")))
 (setq use-package-always-ensure t)
+<<<<<<< HEAD
+(setq use-package-verbose t)
+=======
 
+>>>>>>> be7492f... Update emacs setting architecture
 
 
 ;; Place manually downloaded elisp files in ~/.emacs.d/vendor.
@@ -177,6 +181,8 @@
 ;; Show trailing white spaces
 (setq-default show-trailing-whitespace t)
 
+<<<<<<< HEAD
+=======
 (use-package rainbow-delimiters)
 
 (defun rainbow-delimiters-using-stronger-colors ()
@@ -188,6 +194,7 @@
    do
    (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
      (cl-callf color-saturate-name (face-foreground face) 40))))
+>>>>>>> be7492f... Update emacs setting architecture
 
 ;; popup windows
 (use-package popwin
@@ -276,12 +283,15 @@
     (setq company-tooltip-align-annotations t)))
 
 (use-package flycheck)
+<<<<<<< HEAD
+=======
 (use-package smartparens
   :config
   (progn
     (require 'smartparens-config)
     (smartparens-global-mode t)
     (setq sp-highlight-pair-overlay nil)))
+>>>>>>> be7492f... Update emacs setting architecture
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC (hard to categorize other categories.)
@@ -364,11 +374,56 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;
+<<<<<<< HEAD
+;; Lisp
+;;;;;;;;;;;;;;;;;;;;
+(use-package paredit
+  :defer t
+  :config
+  (define-key paredit-mode-map (kbd "C-h") paredit-backword-delete)
+
+  (defun conditionally-enable-paredit-mode ()
+    (if (eq this-command 'eval-expression)
+        (paredit-mode 1)))
+  (add-hook 'minibuffer-setup-hook 'conditionally-enable-paredit-mode))
+
+(use-package eldoc
+  :defer t
+  :config
+  (setq eldoc-delay 0.1
+        eldoc-minor-mode-string ""))
+
+(use-package rainbow-delimiters)
+
+(defun rainbow-delimiters-using-stronger-colors ()
+  (interactive)
+  (require 'cl-lib)
+  (require 'color)
+  (cl-loop
+   for index from 1 to rainbow-delimiters-max-face-count
+   do
+   (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
+     (cl-callf color-saturate-name (face-foreground face) 40))))
+
+(defun my/rainbow-delimiters-mode-with-stronger-colors ()
+  (rainbow-delimiters-mode 1)
+  (rainbow-delimiters-using-stronger-colors))
+
+(defun my/lisp-mode-defaults ()
+  (paredit-mode 1)
+  (my/rainbow-delimiters-mode-with-stronger-colors)
+  (eldoc-mode 1))
+(defun my/lisp-mode-hook ()
+  (my/lisp-mode-defaults))
+
+(add-hook 'emacs-lisp-mode-hook 'my/lisp-mode-hook)
+=======
 ;; Emacs Lisp
 ;;;;;;;;;;;;;;;;;;;;
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+>>>>>>> be7492f... Update emacs setting architecture
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Clojure
@@ -376,6 +431,32 @@
 (add-to-list 'auto-mode-alist '("\\.cljs$'" . clojure-mode))
 
 (use-package clojure-mode
+<<<<<<< HEAD
+  :init
+  (add-hook 'clojure-mode-hook 'my/lisp-mode-hook))
+
+(use-package cider
+  :init
+  (add-hook 'cider-mode-hook #'clj-refactor-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-repl-mode-hook #'my/lisp-mode-hook)
+  :diminish subword-mode
+  :config
+  (setq nrepl-log-messages t
+        cider-repl-display-in-current-window t
+        cider-repl-use-clojure-font-lock t
+        cider-prompt-save-file-on-load 'always-save
+        cider-font-lock-dynamically '(macro core function var)
+        cider-overlays-use-font-lock t)
+  (cider-repl-toggle-pretty-printing))
+
+(use-package cider-eval-sexp-fu)
+
+(use-package clj-refactor
+  :diminish clj-refactor-mode
+  :config (cljr-add-keybindings-with-prefix "C-c j"))
+=======
   :defer t
   :config
   (progn
@@ -393,6 +474,7 @@
   (rainbow-delimiters-mode 1)
   (smart-newline-mode 1))
 (add-hook 'clojure-mode-hook 'my/clojure-mode-hook)
+>>>>>>> be7492f... Update emacs setting architecture
 
 (when (boundp 'popwin:special-display-config)
   (push '("*cider-apropos*" :noselect t) popwin:special-display-config)
@@ -454,6 +536,7 @@
   (setq ac-sources (cons 'ac-source-clang-async ac-sources))
   (setq ac-clang-cflags '("-std=c++1z"))
   (ac-clang-launch-completion-process))
+<<<<<<< HEAD
 
 (use-package auto-complete-clang-async
   :config
@@ -525,3 +608,87 @@
 (use-package nim-mode
   :mode (("\\.nim$'" . nim-mode)))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FINISHED!!!
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(message "init.el loaded!!")
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (message "init time: %.3f sec"
+                     (float-time (time-subtract after-init-time before-init-time)))))
+=======
+
+(use-package auto-complete-clang-async
+  :config
+  (add-hook 'c++-mode-hook 'my/ac-cpp-mode-setup))
+
+;;;;;;;;;;;;;;;;;;;;
+;; rust
+;;;;;;;;;;;;;;;;;;;;
+(use-package rust-mode
+  :mode (("\\.rs$'" . rust-mode))
+  :config
+  (progn
+    (use-package flycheck-rust)
+    (use-package racer)
+    (setq racer-cmd "~/rust/racer/target/release/racer")
+    (setq racer-rust-src-path "~/rust/rust/src/")
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode)))
+
+;;;;;;;;;;;;;;;;;;;;
+;; Haskell
+;;;;;;;;;;;;;;;;;;;;
+(use-package haskell-mode
+  :mode
+  (("\\.hs\\'" . haskell-mode)
+   ("\\.cabal\\'" . haskell-cabal-mode))
+  :config
+  (progn
+    (use-package ghc)
+    (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+    (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+    (add-hook 'haskell-mode-hook 'haskell-doc-mode)
+    (add-hook 'haskell-mode-hook 'font-lock-mode)
+    (add-hook 'haskell-mode-hook 'imenu-add-menubar-index)))
+
+;;;;;;;;;;;;;;;;;;;;
+;; OCaml
+;;;;;;;;;;;;;;;;;;;;
+(use-package tuareg
+  :mode (("\\.ml" . tuareg-mode))
+  :init
+  (progn
+    (add-hook 'tuareg-mode-hook
+              '(lambda ()
+                 (local-set-key "\C-c;" 'ocamlspot-query)
+                 (local-set-key "\C-c:" 'ocamlspot-query-interface)
+                 (local-set-key "\C-c'" 'ocamlspot-query-uses)
+;                 (local-set-key "\C-c\C-t" 'ocamlspot-type)
+                 (local-set-key "\C-c\C-i" 'ocamlspot-xtype)
+                 (local-set-key "\C-c\C-y" 'ocamlspot-type-and-copy)
+                 (local-set-key "\C-ct" 'caml-types-show-type)
+                 (local-set-key "\C-cp" 'ocamlspot-pop-jump-stack)))
+    (add-hook 'tuareg-mode-hook 'merlin-mode))
+  :config
+  (setq opam-share
+        (substring
+         (shell-command-to-string "opam config var share 2> /dev/null")
+         0 -1))
+  (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+  (require 'utop)
+  (require 'ocp-indent)
+  (require 'ocamlspot)
+  (require 'merlin))
+
+;;;;;;;;;;;;;;;;;;;;
+;; nim
+;;;;;;;;;;;;;;;;;;;;
+(use-package nim-mode
+  :mode (("\\.nim$'" . nim-mode)))
+
+>>>>>>> be7492f... Update emacs setting architecture
