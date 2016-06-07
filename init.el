@@ -39,11 +39,7 @@
   (defmacro use-package (&rest args)
     (error "Please install use-package")))
 (setq use-package-always-ensure t)
-<<<<<<< HEAD
 (setq use-package-verbose t)
-=======
-
->>>>>>> be7492f... Update emacs setting architecture
 
 
 ;; Place manually downloaded elisp files in ~/.emacs.d/vendor.
@@ -181,21 +177,6 @@
 ;; Show trailing white spaces
 (setq-default show-trailing-whitespace t)
 
-<<<<<<< HEAD
-=======
-(use-package rainbow-delimiters)
-
-(defun rainbow-delimiters-using-stronger-colors ()
-  (interactive)
-  (require 'cl-lib)
-  (require 'color)
-  (cl-loop
-   for index from 1 to rainbow-delimiters-max-face-count
-   do
-   (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
-     (cl-callf color-saturate-name (face-foreground face) 40))))
->>>>>>> be7492f... Update emacs setting architecture
-
 ;; popup windows
 (use-package popwin
   :config
@@ -283,15 +264,6 @@
     (setq company-tooltip-align-annotations t)))
 
 (use-package flycheck)
-<<<<<<< HEAD
-=======
-(use-package smartparens
-  :config
-  (progn
-    (require 'smartparens-config)
-    (smartparens-global-mode t)
-    (setq sp-highlight-pair-overlay nil)))
->>>>>>> be7492f... Update emacs setting architecture
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC (hard to categorize other categories.)
@@ -374,7 +346,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;
-<<<<<<< HEAD
 ;; Lisp
 ;;;;;;;;;;;;;;;;;;;;
 (use-package paredit
@@ -417,13 +388,6 @@
   (my/lisp-mode-defaults))
 
 (add-hook 'emacs-lisp-mode-hook 'my/lisp-mode-hook)
-=======
-;; Emacs Lisp
-;;;;;;;;;;;;;;;;;;;;
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
->>>>>>> be7492f... Update emacs setting architecture
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Clojure
@@ -431,7 +395,6 @@
 (add-to-list 'auto-mode-alist '("\\.cljs$'" . clojure-mode))
 
 (use-package clojure-mode
-<<<<<<< HEAD
   :init
   (add-hook 'clojure-mode-hook 'my/lisp-mode-hook))
 
@@ -456,25 +419,12 @@
 (use-package clj-refactor
   :diminish clj-refactor-mode
   :config (cljr-add-keybindings-with-prefix "C-c j"))
-=======
-  :defer t
-  :config
-  (progn
-    (use-package smart-newline)
-    (use-package clojure-mode-extra-font-locking)
-    (use-package cider
-      :config
-      (progn
-        (setq nrepl-hide-special-buffers t)
-        (setq nrepl-buffer-name-show-port t)))
-    (use-package ac-cider)))
 
 (defun my/clojure-mode-hook ()
   (cider-mode 1)
   (rainbow-delimiters-mode 1)
   (smart-newline-mode 1))
 (add-hook 'clojure-mode-hook 'my/clojure-mode-hook)
->>>>>>> be7492f... Update emacs setting architecture
 
 (when (boundp 'popwin:special-display-config)
   (push '("*cider-apropos*" :noselect t) popwin:special-display-config)
@@ -536,7 +486,6 @@
   (setq ac-sources (cons 'ac-source-clang-async ac-sources))
   (setq ac-clang-cflags '("-std=c++1z"))
   (ac-clang-launch-completion-process))
-<<<<<<< HEAD
 
 (use-package auto-complete-clang-async
   :config
@@ -619,76 +568,3 @@
           (lambda ()
             (message "init time: %.3f sec"
                      (float-time (time-subtract after-init-time before-init-time)))))
-=======
-
-(use-package auto-complete-clang-async
-  :config
-  (add-hook 'c++-mode-hook 'my/ac-cpp-mode-setup))
-
-;;;;;;;;;;;;;;;;;;;;
-;; rust
-;;;;;;;;;;;;;;;;;;;;
-(use-package rust-mode
-  :mode (("\\.rs$'" . rust-mode))
-  :config
-  (progn
-    (use-package flycheck-rust)
-    (use-package racer)
-    (setq racer-cmd "~/rust/racer/target/release/racer")
-    (setq racer-rust-src-path "~/rust/rust/src/")
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'company-mode)))
-
-;;;;;;;;;;;;;;;;;;;;
-;; Haskell
-;;;;;;;;;;;;;;;;;;;;
-(use-package haskell-mode
-  :mode
-  (("\\.hs\\'" . haskell-mode)
-   ("\\.cabal\\'" . haskell-cabal-mode))
-  :config
-  (progn
-    (use-package ghc)
-    (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-    (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-    (add-hook 'haskell-mode-hook 'haskell-doc-mode)
-    (add-hook 'haskell-mode-hook 'font-lock-mode)
-    (add-hook 'haskell-mode-hook 'imenu-add-menubar-index)))
-
-;;;;;;;;;;;;;;;;;;;;
-;; OCaml
-;;;;;;;;;;;;;;;;;;;;
-(use-package tuareg
-  :mode (("\\.ml" . tuareg-mode))
-  :init
-  (progn
-    (add-hook 'tuareg-mode-hook
-              '(lambda ()
-                 (local-set-key "\C-c;" 'ocamlspot-query)
-                 (local-set-key "\C-c:" 'ocamlspot-query-interface)
-                 (local-set-key "\C-c'" 'ocamlspot-query-uses)
-;                 (local-set-key "\C-c\C-t" 'ocamlspot-type)
-                 (local-set-key "\C-c\C-i" 'ocamlspot-xtype)
-                 (local-set-key "\C-c\C-y" 'ocamlspot-type-and-copy)
-                 (local-set-key "\C-ct" 'caml-types-show-type)
-                 (local-set-key "\C-cp" 'ocamlspot-pop-jump-stack)))
-    (add-hook 'tuareg-mode-hook 'merlin-mode))
-  :config
-  (setq opam-share
-        (substring
-         (shell-command-to-string "opam config var share 2> /dev/null")
-         0 -1))
-  (add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
-  (require 'utop)
-  (require 'ocp-indent)
-  (require 'ocamlspot)
-  (require 'merlin))
-
-;;;;;;;;;;;;;;;;;;;;
-;; nim
-;;;;;;;;;;;;;;;;;;;;
-(use-package nim-mode
-  :mode (("\\.nim$'" . nim-mode)))
-
->>>>>>> be7492f... Update emacs setting architecture
