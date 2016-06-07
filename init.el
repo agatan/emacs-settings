@@ -351,7 +351,7 @@
 (use-package paredit
   :defer t
   :config
-  (define-key paredit-mode-map (kbd "C-h") paredit-backword-delete)
+  (define-key paredit-mode-map (kbd "C-h") 'paredit-backward-delete)
 
   (defun conditionally-enable-paredit-mode ()
     (if (eq this-command 'eval-expression)
