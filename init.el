@@ -96,6 +96,8 @@
   (progn
     (helm-mode 1)
     (define-key global-map (kbd "M-x") 'helm-M-x)
+    (define-key global-map (kbd "C-x C-f") 'helm-find-files)
+    (define-key global-map (kbd "C-c C-f") 'helm-mini)
     (define-key global-map (kbd "C-x C-r") 'helm-recentf)
     (define-key global-map (kbd "C-x b") 'helm-buffers-list)
     (define-key helm-map (kbd "C-h") 'delete-backward-char)
@@ -113,6 +115,22 @@
   :config
   (progn
     (setq helm-swoop-split-with-multiple-windows t)))
+
+;; mark position and jump to them
+(use-package helm-bm
+  :commands (helm-bm))
+
+(defun bm-toggle-or-helm ()
+  (interactive)
+  (bm-toggle)
+  (when (eq last-command 'bm-toggle-or-helm)
+    (helm-bm)))
+
+(use-package bm
+  :commands (bm-toggle bm-next bm-previous)
+  :bind (("M--" . bm-toggle-or-helm)
+         ("M-[" . bm-previous)
+         ("M-]" . bm-next)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -185,6 +203,13 @@
     (setq display-buffer-function 'popwin:display-buffer)
     (setq popwin:popup-window-position 'bottom)))
 
+;; filer
+(use-package direx
+  :bind (("C-x C-j" . direx:jump-to-directory-other-window))
+  :config
+  (push '(direx:direx-mode :position left :width 30 :dedicated t)
+        popwin:special-display-config))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customizations relating to editing a buffer.
@@ -247,23 +272,40 @@
 (setq kill-whole-line t)
 
 ;; Auto-complete settings
-(use-package auto-complete
-  :config
-  (progn
-    (require 'auto-complete-config)
-    (ac-config-default)
-    (ac-set-trigger-key "TAB")
-    (add-to-list 'ac-sources 'ac-source-symbols)
-    (add-to-list 'ac-sources 'ac-source-filename)))
-
 (use-package company
-  :commands (company-mode)
+  :bind (("<tab>" . company-indent-or-complete-common))
   :config
-  (progn
-    (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
-    (setq company-tooltip-align-annotations t)))
+  (global-company-mode 1)
+  (setq company-tooltip-align-annotations t)
+  (setq company-idle-delay 0.3)
+  (define-key company-active-map (kbd "C-h") nil)
+  (set-face-attribute 'company-tooltip nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common-selection nil
+                      :foreground "white" :background "steelblue")
+  (set-face-attribute 'company-tooltip-selection nil
+                      :foreground "black" :background "steelblue")
+  (set-face-attribute 'company-preview-common nil
+                      :background nil :foreground "lightgrey" :underline t)
+  (set-face-attribute 'company-scrollbar-fg nil
+                      :background "orange")
+  (set-face-attribute 'company-scrollbar-bg nil
+                      :background "gray40"))
+
+(use-package company-quickhelp
+  :config
+  (company-quickhelp-mode 1))
 
 (use-package flycheck)
+
+;; snippet
+(use-package yasnippet
+  :config
+  (define-key yas-keymap (kbd "<tab>") nil)
+  (yas-global-mode 1))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC (hard to categorize other categories.)
@@ -454,14 +496,12 @@
                      ("*slime-xref*")
                      (sldb-mode :stick t)
                      (slime-connection-list-mode)))
-        (push buf popwin:special-display-config)))
+        (push buf popwin:special-display-config)))))
 
-    ;; auto completion for common lisp with slime
-    (use-package ac-slime
-      :config
-      (progn
-        (add-hook 'slime-mode-hook 'set-up-slime-ac)
-        (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)))))
+(use-package slime-company
+  :init
+  (add-hook 'slime-mode-hook #'slime-company))
+
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; c/c++
@@ -474,22 +514,12 @@
 
 (add-to-list 'auto-mode-alist '("\\.hpp$'" . c++-mode))
 
-(use-package auto-complete-c-headers
+(use-package irony
   :config
-  (progn
-    (add-hook 'c++-mode-hook (lambda () (push 'ac-source-c-headers ac-sources)))
-    (add-hook 'c-mode-hook (lambda () (push 'ac-source-c-headers ac-sources)))))
-
-(use-package helm-make)
-
-(defun my/ac-cpp-mode-setup ()
-  (setq ac-sources (cons 'ac-source-clang-async ac-sources))
-  (setq ac-clang-cflags '("-std=c++1z"))
-  (ac-clang-launch-completion-process))
-
-(use-package auto-complete-clang-async
-  :config
-  (add-hook 'c++-mode-hook 'my/ac-cpp-mode-setup))
+  (custom-set-variables '(irony-additional-clang-options '("-std=c++14")))
+  (add-to-list 'company-backends 'company-irony)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (add-hook 'c-mode-common-hook 'irony-mode))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; rust
@@ -556,6 +586,16 @@
 ;;;;;;;;;;;;;;;;;;;;
 (use-package nim-mode
   :mode (("\\.nim$'" . nim-mode)))
+
+;;;;;;;;;;;;;;;;;;;;
+;; Python
+;;;;;;;;;;;;;;;;;;;;
+(use-package python-mode)
+(use-package company-jedi
+  :init
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)
+  (setq jedi:use-shortcuts t))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

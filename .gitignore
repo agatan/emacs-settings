@@ -11,4 +11,5 @@ abbrev_defs
 projectile.cache
 url/
 *~
-
+.python-environments/
+irony/
