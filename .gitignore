@@ -7,7 +7,11 @@ ido.last
 places
 *.eld
 .recentf
-.smex-items
 abbrev_defs
 projectile.cache
 url/
+*~
+.python-environments/
+irony/
+eshell/
+tramp
