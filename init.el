@@ -456,12 +456,6 @@
   :diminish clj-refactor-mode
   :config (cljr-add-keybindings-with-prefix "C-c j"))
 
-(defun my/clojure-mode-hook ()
-  (cider-mode 1)
-  (rainbow-delimiters-mode 1)
-  (smart-newline-mode 1))
-(add-hook 'clojure-mode-hook 'my/clojure-mode-hook)
-
 (when (boundp 'popwin:special-display-config)
   (push '("*cider-apropos*" :noselect t) popwin:special-display-config)
   (push '("*cider-macroexpansion*" :noselect t) popwin:special-display-config)
