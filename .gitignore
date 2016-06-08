@@ -13,3 +13,5 @@ url/
 *~
 .python-environments/
 irony/
+eshell/
+tramp
