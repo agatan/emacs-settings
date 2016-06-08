@@ -156,10 +156,6 @@
  ((or (eq system-type 'mac) (eq system-type 'darwin))
   (set-face-attribute 'default nil :family "Ricty" :height 150))
  ((eq system-type 'gnu/linux) (set-face-attribute 'default nil :family "Ricty Diminished" :height 100)))
-(set-fontset-font (frame-parameter nil 'font)
-                  'japanese-jisx0208
-                  (font-spec :family "Ricty Diminished"))
-
 
 
 ;; These settings relate to how emacs interacts with your operation system
@@ -205,7 +201,7 @@
 
 ;; filer
 (use-package direx
-  :bind (("C-x C-j" . direx:jump-to-directory-other-window))
+  :bind (("C-c C-j" . direx:jump-to-directory-other-window))
   :config
   (push '(direx:direx-mode :position left :width 30 :dedicated t)
         popwin:special-display-config))
@@ -247,9 +243,6 @@
   (interactive)
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 (global-set-key (kbd "C-;") 'toggle-comment-on-line)
-
-;; yay rainbows!
-(rainbow-delimiters-mode t)
 
 ;; use 2 spaces for tabs
 (defun die-tabs (n)
