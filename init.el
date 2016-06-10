@@ -87,50 +87,49 @@
 ;; projectile everywhere
 (use-package projectile
   :config
-  (projectile-global-mode))
+  (projectile-global-mode)
+  )
 
-
-;; helm settings
-(use-package helm
-  :config
-  (progn
-    (helm-mode 1)
-    (define-key global-map (kbd "M-x") 'helm-M-x)
-    (define-key global-map (kbd "C-x C-f") 'helm-find-files)
-    (define-key global-map (kbd "C-c C-f") 'helm-mini)
-    (define-key global-map (kbd "C-x C-r") 'helm-recentf)
-    (define-key global-map (kbd "C-x b") 'helm-buffers-list)
-    (define-key helm-map (kbd "C-h") 'delete-backward-char)
-    (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-    (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-    (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-    (define-key helm-find-files-map (kbd "C-z") 'helm-select-action)))
 
 ;; ace-isearch
 (use-package ace-isearch
   :config
   (global-ace-isearch-mode 1))
 
-(use-package helm-swoop
+(use-package ag
+  :if (executable-find "ag"))
+
+;; ido
+(use-package ido
+  :bind
+  (("C-x C-r" . ido-recentf-open)
+   ("C-x C-f" . ido-find-file)
+   ("C-x C-d" . ido-dired)
+   ("C-x b" . ido-switch-buffer)
+   ("C-x C-b" . ido-switch-buffer))
+  :init
+  (defun ido-recentf-open ()
+    "Use `ido-completing-read' to \\[find-file] a recent file"
+    (interactive)
+    (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+        (message "Opening file...")
+      (message "Aborting")))
   :config
-  (progn
-    (setq helm-swoop-split-with-multiple-windows t)))
-
-;; mark position and jump to them
-(use-package helm-bm
-  :commands (helm-bm))
-
-(defun bm-toggle-or-helm ()
-  (interactive)
-  (bm-toggle)
-  (when (eq last-command 'bm-toggle-or-helm)
-    (helm-bm)))
-
-(use-package bm
-  :commands (bm-toggle bm-next bm-previous)
-  :bind (("M--" . bm-toggle-or-helm)
-         ("M-[" . bm-previous)
-         ("M-]" . bm-next)))
+  (ido-mode 1)
+  (setq ido-enable-flex-matching t)
+  (setq ido-save-directory-list-file "~/.emacs.d/cache/ido.last")
+  (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+  (setq ido-max-window-height 0.75))
+(use-package smex
+  :bind
+  (("M-x" . smex))
+  :init
+  (setq smex-save-file "~/.emacs.d/cache/.smex-items")
+  :config
+  (smex-initialize))
+(use-package ido-ubiquitous
+  :config
+  (ido-ubiquitous-mode 1))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -147,9 +146,6 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'load-path "~/.emacs.d/themes")
 (load-theme 'wombat)
-
-(use-package helm-themes
-  :commands helm-themes)
 
 ;; increse font size for better readability
 (cond
@@ -190,6 +186,18 @@
 
 ;; Show trailing white spaces
 (setq-default show-trailing-whitespace t)
+(defun my/disable-trailing-mode-hook ()
+  "Disable show trail whitespace"
+  (setq show-trailing-whitespace nil))
+(defvar my/disable-trailing-modes
+  '(eshell-mode
+    eww-mode
+    term-mode))
+(mapc
+ (lambda (mode)
+   (add-hook (intern (concat (symbol-name mode) "-hook"))
+             'my/disable-trailing-mode-hook))
+ my/disable-trailing-modes)
 
 ;; popup windows
 (use-package popwin
@@ -201,7 +209,7 @@
 
 ;; filer
 (use-package direx
-  :bind (("C-c C-j" . direx:jump-to-directory-other-window))
+  :bind (("C-x j" . direx:jump-to-directory-other-window))
   :config
   (push '(direx:direx-mode :position left :width 30 :dedicated t)
         popwin:special-display-config))
@@ -263,6 +271,9 @@
 
 ;; C-k delete a line and '\n' if cursor is on the head of line
 (setq kill-whole-line t)
+
+;; ensure newline on the end of file
+(setq require-final-newline t)
 
 ;; Auto-complete settings
 (use-package company
@@ -331,6 +342,43 @@
 
 (use-package magit)
 
+;; Web brouser
+(use-package eww
+  :commands (eww)
+  :config
+  (setq eww-search-prefix "https://www.google.com/search?q=")
+  (defvar eww-disable-colorize t)
+  (defun shr-colorize-region--disable (orig start end fg &optional bg &rest _)
+    (unless eww-disable-colorize
+      (funcall orig start end fg)))
+  (advice-add 'shr-colorize-region :around 'shr-colorize-region--disable)
+  (advice-add 'eww-colorize-region :around 'shr-colorize-region--disable)
+  (defun eww-disable-color ()
+    "ewwで文字色を反映させない"
+    (interactive)
+    (setq-local eww-disable-colorize t)
+    (eww-reload))
+  (defun eww-enable-color ()
+    "ewwで文字色を反映させる"
+    (interactive)
+    (setq-local eww-disable-colorize nil)
+    (eww-reload)))
+
+;; Twitter
+(use-package twittering-mode
+  :commands (twit)
+  :config
+  (setq twittering-account-authorization 'authorized)
+  (setq twittering-oauth-access-token-alist
+        '(("oauth_token" . "3174259753-C075cEsx85kt2nmrOC494YfHqjJXiBE6i0nd12O")
+          ("oauth_token_secret" . "TAxdcXcgTIkPG7h2H8crxmI6RmCvTf4WzN0IFhfBBwVrq")
+          ("user_id" . "3174259753")
+          ("screen_name" . "agatan_")
+          ("x_auth_expires" . "0"))))
+
+;; eshell
+(use-package eshell
+  :commands (eshell))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; SKK
@@ -370,7 +418,7 @@
     (setq org-agenda-files (list org-directory))
     (setq org-src-fontify-natively t)))
 (use-package open-junk-file
-  :bind (("C-x j" . open-junk-file))
+  :bind (("C-c j" . open-junk-file))
   :config
   (progn
     (setq open-junk-file-format "~/Dropbox/org/%Y-%m%d-memo.")))
@@ -584,6 +632,13 @@
   (add-hook 'python-mode-hook 'jedi:setup)
   (setq jedi:complete-on-dot t)
   (setq jedi:use-shortcuts t))
+
+;;;;;;;;;;;;;;;;;;;;
+;; JavaScript
+;;;;;;;;;;;;;;;;;;;;
+(use-package js2-mode
+  :mode (("\\.jsx$" . js2-jsx-mode))
+  :defer t)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
