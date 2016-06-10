@@ -349,6 +349,10 @@
 ;; version control
 (use-package magit)
 
+(use-package git-gutter-fringe
+  :config
+  (git-gutter-mode t))
+
 ;; undo history
 (use-package undo-tree
   :config
