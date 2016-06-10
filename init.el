@@ -345,6 +345,11 @@
   (global-undo-tree-mode t)
   (global-set-key (kbd "M-/") 'undo-tree-redo))
 
+;; highlight when undo and yank...
+(use-package volatile-highlights
+  :config
+  (volatile-highlights-mode t))
+
 ;; Web brouser
 (use-package eww
   :commands (eww)
