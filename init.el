@@ -176,6 +176,9 @@
 ;; show column
 (column-number-mode 1)
 
+;; show line number
+(linum-mode 1)
+
 ;; Show trailing white spaces
 (setq-default show-trailing-whitespace t)
 (defun my/disable-trailing-mode-hook ()
@@ -301,6 +304,13 @@
   :config
   (define-key yas-keymap (kbd "C-i") nil)
   (yas-global-mode 1))
+
+;; search and replace strings
+(use-package anzu
+  :config
+  (global-anzu-mode 1)
+  (setq anzu-mode-lighter ""
+        anzu-deactivate-region t))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
