@@ -177,7 +177,9 @@
 (column-number-mode 1)
 
 ;; show line number
-(linum-mode 1)
+(use-package hlinum
+  :config
+  (hlinum-activate))
 
 ;; Show trailing white spaces
 (setq-default show-trailing-whitespace t)
