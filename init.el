@@ -14,6 +14,11 @@
 (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
   (when (fboundp mode) (funcall mode -1)))
 
+;; Open my init.el
+(defun open-my-init-file ()
+  (interactive)
+  (find-file user-init-file))
+
 ;;;;
 ;; Packages
 ;;;;

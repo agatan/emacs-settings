@@ -15,4 +15,4 @@ url/
 irony/
 eshell/
 tramp
-cache/
+.smex-items
