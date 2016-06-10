@@ -87,17 +87,8 @@
 ;; projectile everywhere
 (use-package projectile
   :config
-  (projectile-global-mode)
-  )
+  (projectile-global-mode))
 
-
-;; ace-isearch
-(use-package ace-isearch
-  :config
-  (global-ace-isearch-mode 1))
-
-(use-package ag
-  :if (executable-find "ag"))
 
 ;; ido
 (use-package ido
@@ -129,6 +120,7 @@
   (smex-initialize))
 (use-package ido-ubiquitous
   :config
+  (ido-everywhere 1)
   (ido-ubiquitous-mode 1))
 
 
@@ -199,21 +191,21 @@
              'my/disable-trailing-mode-hook))
  my/disable-trailing-modes)
 
-;; popup windows
-(use-package popwin
+;; window settings
+(use-package winner
   :config
-  (progn
-    (popwin-mode 1)
-    (setq display-buffer-function 'popwin:display-buffer)
-    (setq popwin:popup-window-position 'bottom)))
+  (winner-mode 1)
+  (global-set-key (kbd "C-z") 'winner-undo)
+  (global-set-key (kbd "C-M-z") 'winner-redo))
 
 ;; filer
 (use-package direx
-  :bind (("C-x j" . direx:jump-to-directory-other-window))
-  :config
-  (push '(direx:direx-mode :position left :width 30 :dedicated t)
-        popwin:special-display-config))
+  :bind (("C-x j" . direx:jump-to-directory-other-window)))
 
+;; key bindings navigation.
+(use-package which-key
+  :config
+  (which-key-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customizations relating to editing a buffer.
@@ -277,7 +269,7 @@
 
 ;; Auto-complete settings
 (use-package company
-  :bind (("<tab>" . company-indent-or-complete-common))
+  :bind (("C-i" . company-indent-or-complete-common))
   :config
   (global-company-mode 1)
   (setq company-tooltip-align-annotations t)
@@ -307,7 +299,7 @@
 ;; snippet
 (use-package yasnippet
   :config
-  (define-key yas-keymap (kbd "<tab>") nil)
+  (define-key yas-keymap (kbd "C-i") nil)
   (yas-global-mode 1))
 
 
@@ -330,7 +322,11 @@
   (setq x-super-keysym 'meta)
   (setq x-meta-keysym 'super))
 
-;; shell-pop settings
+;; shell integration
+;; eshell
+(use-package eshell
+  :commands (eshell))
+
 (use-package shell-pop
   :config
   (progn
@@ -340,7 +336,14 @@
      '(shell-pop-term-shell (substring (shell-command-to-string "which zsh 2>/dev/null") 0 -1))))
   :bind ("C-c c" . shell-pop))
 
+;; version control
 (use-package magit)
+
+;; undo history
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode t)
+  (global-set-key (kbd "M-/") 'undo-tree-redo))
 
 ;; Web brouser
 (use-package eww
@@ -376,9 +379,6 @@
           ("screen_name" . "agatan_")
           ("x_auth_expires" . "0"))))
 
-;; eshell
-(use-package eshell
-  :commands (eshell))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; SKK
@@ -504,12 +504,6 @@
   :diminish clj-refactor-mode
   :config (cljr-add-keybindings-with-prefix "C-c j"))
 
-(when (boundp 'popwin:special-display-config)
-  (push '("*cider-apropos*" :noselect t) popwin:special-display-config)
-  (push '("*cider-macroexpansion*" :noselect t) popwin:special-display-config)
-  (push '("*cider-error*" :noselect t :height 20) popwin:special-display-config)
-  (push '("*cider-doc*" :noselect t :height 20) popwin:special-display-config)
-  (push '(cider-macroexpansion-mode :noselect t) popwin:special-display-config))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; common lisp
@@ -521,18 +515,7 @@
   :config
   (progn
     (setq inferior-lisp-program "ros run")
-    (setq slime-contribs '(slime-fancy))
-
-    ;; popwin settings
-    (when (boundp 'popwin:special-display-config)
-      (dolist (buf '(("*slime-apropos*")
-                     ("*slime-macroexpansion*")
-                     ("*slime-description*")
-                     ("*slime-compilation*")
-                     ("*slime-xref*")
-                     (sldb-mode :stick t)
-                     (slime-connection-list-mode)))
-        (push buf popwin:special-display-config)))))
+    (setq slime-contribs '(slime-fancy))))
 
 (use-package slime-company
   :init
