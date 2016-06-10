@@ -108,14 +108,14 @@
   :config
   (ido-mode 1)
   (setq ido-enable-flex-matching t)
-  (setq ido-save-directory-list-file "~/.emacs.d/cache/ido.last")
+  (setq ido-save-directory-list-file "~/.emacs.d/ido.last")
   (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
   (setq ido-max-window-height 0.75))
 (use-package smex
   :bind
   (("M-x" . smex))
   :init
-  (setq smex-save-file "~/.emacs.d/cache/.smex-items")
+  (setq smex-save-file "~/.emacs.d/.smex-items")
   :config
   (smex-initialize))
 (use-package ido-ubiquitous
@@ -179,6 +179,7 @@
 ;; show line number
 (use-package hlinum
   :config
+  (global-linum-mode 1)
   (hlinum-activate))
 
 ;; Show trailing white spaces
