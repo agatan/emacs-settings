@@ -278,6 +278,9 @@
 ;; ensure newline on the end of file
 (setq require-final-newline t)
 
+;; reload buffer when the file modified
+(global-auto-revert-mode)
+
 ;; Auto-complete settings
 (use-package company
   :bind (("C-i" . company-indent-or-complete-common))
