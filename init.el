@@ -278,8 +278,7 @@
 ;; ensure newline on the end of file
 (setq require-final-newline t)
 
-;; reload buffer when the file modified
-(global-auto-revert-mode)
+
 
 ;; Auto-complete settings
 (use-package company
@@ -362,7 +361,7 @@
 
 (use-package git-gutter-fringe
   :config
-  (git-gutter-mode t))
+  (global-git-gutter-mode t))
 
 ;; undo history
 (use-package undo-tree
