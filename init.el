@@ -181,12 +181,6 @@
 ;; show column
 (column-number-mode 1)
 
-;; show line number
-(use-package hlinum
-  :config
-  (global-linum-mode 1)
-  (hlinum-activate))
-
 ;; Show trailing white spaces
 (setq-default show-trailing-whitespace t)
 (defun my/disable-trailing-mode-hook ()
@@ -322,6 +316,15 @@
   (setq anzu-mode-lighter ""
         anzu-deactivate-region t))
 
+;; tag jump
+(use-package xcscope
+  :bind (("C-c s s" . cscope-find-this-symbol)
+         ("C-c s d" . cscope-find-global-definition)))
+
+(use-package gtags
+  :config
+  (add-hook 'c-mode-hook (lambda () (gtags-mode 1)))
+  (add-hook 'c++-mode-hook (lambda () (gtags-mode 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC (hard to categorize other categories.)
