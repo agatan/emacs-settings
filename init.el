@@ -646,12 +646,6 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; Python
 ;;;;;;;;;;;;;;;;;;;;
-(use-package python-mode)
-(use-package company-jedi
-  :init
-  (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t)
-  (setq jedi:use-shortcuts t))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; JavaScript
