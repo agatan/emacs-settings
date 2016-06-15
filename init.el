@@ -540,18 +540,23 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;; common lisp
 ;;;;;;;;;;;;;;;;;;;;
-(use-package slime
-  :commands (slime)
-  :mode (("\\.lisp$'" . slime-mode)
-         ("\\.ros$'" . slime-mode))
+(use-package auto-complete
   :config
-  (progn
-    (setq inferior-lisp-program "ros run")
-    (setq slime-contribs '(slime-fancy))))
+  (require 'auto-complete-config)
+  (ac-config-default))
 
-(use-package slime-company
-  :init
-  (add-hook 'slime-mode-hook #'slime-company))
+(let ((slime-helper (expand-file-name "~/.roswell/lisp/quicklisp/slime-helper.el")))
+  (when (file-exists-p slime-helper)
+    (load slime-helper)
+    (setq inferior-lisp-program "ros -L ccl-bin -Q run")))
+(add-to-list 'auto-mode-alist '("\\.ros$'" . slime-mode))
+(add-hook 'slime-repl-mode-hook '(lambda () (my/lisp-mode-defaults) (company-mode nil)))
+(add-hook 'slime-mode-hook #'(lambda () (my/lisp-mode-defaults) (company-mode nil)))
+
+(use-package ac-slime
+  :config
+  (add-hook 'slime-mode-hook 'set-up-slime-ac)
+  (add-hook 'slime-repl-mode-hook 'set-up-slime-ac))
 
 
 ;;;;;;;;;;;;;;;;;;;;
