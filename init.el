@@ -551,7 +551,7 @@
       (shell-command "ros -Q -e '(ql:quickload :quicklisp-slime-helper)' -q"))
     (when (file-exists-p slime-helper)
       (load slime-helper)
-      (setq inferior-lisp-program "ros -L ccl-bin -Q run"))))
+      (setq inferior-lisp-program "ros -Q run"))))
 (add-to-list 'auto-mode-alist '("\\.ros$'" . slime-mode))
 (add-hook 'slime-repl-mode-hook '(lambda () (my/lisp-mode-defaults) (company-mode nil)))
 (add-hook 'slime-mode-hook #'(lambda () (my/lisp-mode-defaults) (company-mode nil)))
