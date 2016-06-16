@@ -545,13 +545,23 @@
   (require 'auto-complete-config)
   (ac-config-default))
 
+(use-package ansi-color)
+
 (when (executable-find "ros")
   (let ((slime-helper (expand-file-name "~/.roswell/lisp/quicklisp/slime-helper.el")))
     (unless (file-exists-p slime-helper)
       (shell-command "ros -Q -e '(ql:quickload :quicklisp-slime-helper)' -q"))
     (when (file-exists-p slime-helper)
       (load slime-helper)
-      (setq inferior-lisp-program "ros -Q run"))))
+      (setq inferior-lisp-program "ros -Q run")
+      (slime-setup '(slime-fancy)))))
+
+(defadvice slime-repl-emit (around slime-repl-ansi-colorize activate compile)
+  (with-current-buffer (slime-output-buffer)
+    (let ((start slime-output-start))
+      (setq ad-return-value ad-do-it)
+      (ansi-color-apply-on-region start slime-output-end))))
+
 (add-to-list 'auto-mode-alist '("\\.ros$'" . slime-mode))
 (add-hook 'slime-repl-mode-hook '(lambda () (my/lisp-mode-defaults) (company-mode nil)))
 (add-hook 'slime-mode-hook #'(lambda () (my/lisp-mode-defaults) (company-mode nil)))
