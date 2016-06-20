@@ -19,6 +19,8 @@
   (interactive)
   (find-file user-init-file))
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 ;;;;
 ;; Packages
 ;;;;
@@ -278,7 +280,6 @@
 (use-package company
   :bind (("C-i" . company-indent-or-complete-common))
   :config
-  (global-company-mode 1)
   (setq company-tooltip-align-annotations t)
   (setq company-idle-delay 0.3)
   (define-key company-active-map (kbd "C-h") nil)
@@ -563,8 +564,8 @@
       (ansi-color-apply-on-region start slime-output-end))))
 
 (add-to-list 'auto-mode-alist '("\\.ros$'" . slime-mode))
-(add-hook 'slime-repl-mode-hook '(lambda () (my/lisp-mode-defaults) (company-mode nil)))
-(add-hook 'slime-mode-hook #'(lambda () (my/lisp-mode-defaults) (company-mode nil)))
+(add-hook 'slime-repl-mode-hook '(lambda () (my/lisp-mode-defaults)))
+(add-hook 'slime-mode-hook #'(lambda () (my/lisp-mode-defaults)))
 
 (use-package ac-slime
   :config
