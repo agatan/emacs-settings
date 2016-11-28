@@ -106,7 +106,7 @@
     (require 'anything-config)
     (setq anything-enable-shortcuts 'prefix)
     (define-key anything-map (kbd "@") 'anything-select-with-prefix-shortcut)
-    (global-set-key (kbd "C-x b") 'anythin-mini)))
+    (global-set-key (kbd "C-x b") 'anything-mini)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -166,15 +166,6 @@
 (defun my/disable-trailing-mode-hook ()
   "Disable show trail whitespace"
   (setq show-trailing-whitespace nil))
-(defvar my/disable-trailing-modes
-  '(eshell-mode
-    eww-mode
-    term-mode))
-(mapc
- (lambda (mode)
-   (add-hook (intern (concat (symbol-name mode) "-hook"))
-             'my/disable-trailing-mode-hook))
- my/disable-trailing-modes)
 
 ;; window settings
 (use-package winner
@@ -182,10 +173,6 @@
   (winner-mode 1)
   (global-set-key (kbd "C-z") 'winner-undo)
   (global-set-key (kbd "C-M-z") 'winner-redo))
-
-;; filer
-(use-package direx
-  :bind (("C-x j" . direx:jump-to-directory-other-window)))
 
 ;; key bindings navigation.
 (use-package which-key
@@ -260,8 +247,6 @@
 
 ;; ensure newline on the end of file
 (setq require-final-newline t)
-
-
 
 ;; Auto-complete settings
 (use-package company
@@ -364,28 +349,6 @@
 (use-package volatile-highlights
   :config
   (volatile-highlights-mode t))
-
-;; Web brouser
-(use-package eww
-  :commands (eww)
-  :config
-  (setq eww-search-prefix "https://www.google.com/search?q=")
-  (defvar eww-disable-colorize t)
-  (defun shr-colorize-region--disable (orig start end fg &optional bg &rest _)
-    (unless eww-disable-colorize
-      (funcall orig start end fg)))
-  (advice-add 'shr-colorize-region :around 'shr-colorize-region--disable)
-  (advice-add 'eww-colorize-region :around 'shr-colorize-region--disable)
-  (defun eww-disable-color ()
-    "ewwで文字色を反映させない"
-    (interactive)
-    (setq-local eww-disable-colorize t)
-    (eww-reload))
-  (defun eww-enable-color ()
-    "ewwで文字色を反映させる"
-    (interactive)
-    (setq-local eww-disable-colorize nil)
-    (eww-reload)))
 
 ;; Twitter
 (use-package twittering-mode
@@ -637,12 +600,6 @@
   (require 'ocp-indent)
   (require 'ocamlspot)
   (require 'merlin))
-
-;;;;;;;;;;;;;;;;;;;;
-;; nim
-;;;;;;;;;;;;;;;;;;;;
-(use-package nim-mode
-  :mode (("\\.nim$'" . nim-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Python
