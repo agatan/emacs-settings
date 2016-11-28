@@ -48,6 +48,9 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 
+;; to update packages
+(use-package package-utils
+  :commands (package-utils-upgrade-by-name package-utils-upgrade-all))
 
 ;; Place manually downloaded elisp files in ~/.emacs.d/vendor.
 ;;
@@ -96,39 +99,14 @@
   :config
   (projectile-global-mode))
 
-
-;; ido
-(use-package ido
-  :bind
-  (("C-x C-r" . ido-recentf-open)
-   ("C-x C-f" . ido-find-file)
-   ("C-x C-d" . ido-dired)
-   ("C-x b" . ido-switch-buffer)
-   ("C-x C-b" . ido-switch-buffer))
-  :init
-  (defun ido-recentf-open ()
-    "Use `ido-completing-read' to \\[find-file] a recent file"
-    (interactive)
-    (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-        (message "Opening file...")
-      (message "Aborting")))
+;; anything.el
+(use-package anything
   :config
-  (ido-mode 1)
-  (setq ido-enable-flex-matching t)
-  (setq ido-save-directory-list-file "~/.emacs.d/ido.last")
-  (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
-  (setq ido-max-window-height 0.75))
-(use-package smex
-  :bind
-  (("M-x" . smex))
-  :init
-  (setq smex-save-file "~/.emacs.d/.smex-items")
-  :config
-  (smex-initialize))
-(use-package ido-ubiquitous
-  :config
-  (ido-everywhere 1)
-  (ido-ubiquitous-mode 1))
+  (progn
+    (require 'anything-config)
+    (setq anything-enable-shortcuts 'prefix)
+    (define-key anything-map (kbd "@") 'anything-select-with-prefix-shortcut)
+    (global-set-key (kbd "C-x b") 'anythin-mini)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -266,7 +244,16 @@
 (global-set-key (kbd "C-h") 'backward-delete-char)
 
 ;; tab width
-(custom-set-variables '(tab-width 4))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(irony-additional-clang-options (quote ("-std=c++14")))
+ '(package-selected-packages
+   (quote
+    (anything-config package-utils anything xcscope which-key volatile-highlights use-package undo-tree twittering-mode tuareg smex slime-company shell-pop rust-mode rainbow-delimiters projectile open-junk-file nim-mode magit js2-mode irony ido-ubiquitous hlinum gtags git-gutter-fringe ghc exec-path-from-shell direx ddskk ctags company-quickhelp clj-refactor cider-eval-sexp-fu avy anzu ag ac-slime)))
+ '(tab-width 4))
 
 ;; C-k delete a line and '\n' if cursor is on the head of line
 (setq kill-whole-line t)
@@ -679,3 +666,9 @@
           (lambda ()
             (message "init time: %.3f sec"
                      (float-time (time-subtract after-init-time before-init-time)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
